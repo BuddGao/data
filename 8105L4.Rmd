@@ -91,3 +91,8 @@ litters_df_base = read.csv("data/FAS_litters.csv")
 # dataframe but not tibble. tibble has more information.
 ```
 
+## how do i export data
+```{r}
+write_csv(fellow_df, "data/fellowship_words.csv")
+```
+
