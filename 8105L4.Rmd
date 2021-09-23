@@ -1,0 +1,16 @@
+---
+title: "Simple document"
+output: github_document
+---
+
+I'm an R Markdown document! 
+
+```{r, echo = FLASE, message = FALSE}
+library(tidyverse)
+```
+
+I want to improt 'FAS_litters.csv'
+
+```{r}
+read_csv("data/FAS_litters.csv")
+```
