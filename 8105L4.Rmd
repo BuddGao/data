@@ -7,7 +7,8 @@ I'm an R Markdown document!
 
 ```{r}
 library(tidyverse)
-
+library(readxl)
+library(haven)
 ```
 
 I want to improt 'FAS_litters.csv'.
@@ -62,5 +63,31 @@ litters_data = read_csv(file = "./data/FAS_litters.csv",
 
 )
 litters_data
+```
+## Reading from Excel
+```{r}
+
+mlbll_df = readxl::read_excel("data/mlb11.xlsx")
+```
+
+LotR Words is next.
+
+```{r}
+fellow_df = readxl::read_excel("data/LotR_Words.xlsx")
+fellow_df1 = readxl::read_excel("data/LotR_Words.xlsx",)
+
+```
+
+## Read a SAS file
+```{r}
+# need to import 'haven'
+#pulse_df = read_sas("data/public_pulse_data.sas7bdat")
+#???? Failed
+```
+
+## why to never use 'read_csv'
+```{r}
+litters_df_base = read.csv("data/FAS_litters.csv")
+# dataframe but not tibble. tibble has more information.
 ```
 
