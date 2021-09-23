@@ -5,12 +5,34 @@ output: github_document
 
 I'm an R Markdown document! 
 
-```{r, echo = FLASE, message = FALSE}
+```{r}
 library(tidyverse)
+
 ```
 
-I want to improt 'FAS_litters.csv'
+I want to improt 'FAS_litters.csv'.
 
 ```{r}
-read_csv("data/FAS_litters.csv")
+
+litters_df = read_csv("data/FAS_litters.csv")
 ```
+
+I want better name.
+```{r}
+names(litters_df)
+litters_df = janitor::clean_names(litters_df)
+#do not need to import whole janitor library
+```
+
+Look at the dataset
+
+```{r}
+view(litters_df)
+```
+
+Summery information -- 'skimr'
+```{r}
+skimr::skim(litters_df)
+```
+
+
