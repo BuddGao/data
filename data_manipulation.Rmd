@@ -57,4 +57,12 @@ rearrange
 ```{r}
 arrange(litters_data, gd_of_birth, gd0_weight)
 ```
+pipes????
+```{r}
+litter_df = 
+  read_csv("./data/FAS_litters.csv") %>%
+  janitor::clean_names() %>%
+  filter(group %in% c('Con7','Con8')) %>%
+
+```
 
