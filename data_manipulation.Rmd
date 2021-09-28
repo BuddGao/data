@@ -57,12 +57,15 @@ rearrange
 ```{r}
 arrange(litters_data, gd_of_birth, gd0_weight)
 ```
-pipes????
+pipes
 ```{r}
-litter_df = 
-  read_csv("./data/FAS_litters.csv") %>%
+litters_data = 
+  read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>%
   janitor::clean_names() %>%
-  filter(group %in% c('Con7','Con8')) %>%
-
+  select(-pups_survive) %>%
+  mutate(
+    wt_gain = gd18_weight - gd0_weight,
+    group = str_to_lower(group)) %>% 
+  drop_na(wt_gain)
 ```
 
