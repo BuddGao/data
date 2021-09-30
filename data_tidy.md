@@ -59,6 +59,8 @@ analysis_df =
     )
 ```
 
+(no ‘spread()’ akways ‘pivot\_wider()’)
+
 ## bind\_rows
 
 import LotR movie
@@ -89,3 +91,55 @@ lotr_df =
 ```
 
 (never use rbind(), always use ‘bind\_rows()’.)
+
+## join
+
+``` r
+pups_df = 
+  read_csv("./data/FAS_pups.csv") %>%
+  janitor::clean_names() %>%
+  mutate(
+    sex = recode(sex, `1` = "male", `2` = "female"), #'1' say that is a variable but not number.
+    sex = factor(sex)) 
+```
+
+    ## Rows: 313 Columns: 6
+
+    ## -- Column specification --------------------------------------------------------
+    ## Delimiter: ","
+    ## chr (1): Litter Number
+    ## dbl (5): Sex, PD ears, PD eyes, PD pivot, PD walk
+
+    ## 
+    ## i Use `spec()` to retrieve the full column specification for this data.
+    ## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+litters_df = 
+  read_csv("./data/FAS_litters.csv") %>%
+  janitor::clean_names() %>%
+  separate(group, into = c("dose", "day_of_tx"), sep = 3) %>%
+  relocate(litter_number) %>%
+  mutate(
+    wt_gain = gd18_weight - gd0_weight,
+    dose = str_to_lower(dose))
+```
+
+    ## Rows: 49 Columns: 8
+
+    ## -- Column specification --------------------------------------------------------
+    ## Delimiter: ","
+    ## chr (2): Group, Litter Number
+    ## dbl (6): GD0 weight, GD18 weight, GD of Birth, Pups born alive, Pups dead @ ...
+
+    ## 
+    ## i Use `spec()` to retrieve the full column specification for this data.
+    ## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+Let’s join them up.
+
+``` r
+fas_df =
+  left_join(pups_df, litters_df, by = 'litter_number') %>%
+  relocate(litter_number, dose, day_of_tx) #?
+```
