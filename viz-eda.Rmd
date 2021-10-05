@@ -1,0 +1,87 @@
+---
+title: "ggplot 1"
+output: github_document
+---
+
+
+```{r}
+library(tidyverse)
+
+```
+Loading dataset 
+```{r}
+weather_df = 
+  rnoaa::meteo_pull_monitors(
+    c("USW00094728", "USC00519397", "USS0023B17S"),
+    var = c("PRCP", "TMIN", "TMAX"), 
+    date_min = "2017-01-01",
+    date_max = "2017-12-31") %>%
+  mutate(
+    name = recode(
+      id, 
+      USW00094728 = "CentralPark_NY", 
+      USC00519397 = "Waikiki_HA",
+      USS0023B17S = "Waterhole_WA"),
+    tmin = tmin / 10,
+    tmax = tmax / 10) %>%
+  select(name, id, everything())
+```
+
+## Scatterplot
+
+```{r}
+ggp_tmax_tmin =
+  weather_df %>%
+  ggplot(aes(x = tmin, y = tmax)) +
+  geom_point()
+
+```
+
+
+## Let's fancy it up
+color, lines, and so on
+```{r}
+weather_df %>%
+  ggplot(aes(x = tmin, y = tmax, color = name)) + #global setting for color
+  geom_point(alpha = .3) + # local setting for color
+  geom_smooth(se = FALSE) + # smooth line to approach data
+  facet_grid(. ~ name) # separate the graphs.
+```
+
+Let's get rid of rows "and": &, "or": |
+```{r}
+filter(litters_data, gd_of_birth == 20)
+filter(litters_data, gd0_weight < 21)
+filter(litters_data, group %in% c('Con7','Con8'))
+filter(litters_data, gd_of_birth == 20, group == "Con7")
+
+drop_na(litters_data, gd0_weight)
+```
+
+## mutate
+add or change columns
+```{r}
+a =mutate(litters_data, 
+          weight_change = gd18_weight- gd0_weight,
+          group = str_to_lower(group))
+```
+
+rearrange
+```{r}
+arrange(litters_data, gd_of_birth, gd0_weight)
+```
+pipes
+```{r}
+litters_data = 
+  read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>%
+  janitor::clean_names() %>%
+  select(-pups_survive) %>%
+  mutate(
+    wt_gain = gd18_weight - gd0_weight,
+    group = str_to_lower(group)) %>% 
+  drop_na(wt_gain)
+```
+```{r}
+Sys.setenv(LANGUAGE = "en")
+```
+
