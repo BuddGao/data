@@ -6,7 +6,12 @@ output: github_document
 
 ```{r}
 library(tidyverse)
-
+library(ggridges)
+knitr::opts_chunk$set(  #global setting of chunk
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
 ```
 Loading dataset 
 ```{r}
@@ -58,10 +63,6 @@ weather_df %>%
 ```
 
 
-```{r}
-help(geom_smooth)
-```
-
 ## with manipulation
 ```{r}
 #weather_df %>%
@@ -80,5 +81,53 @@ weather_df %>%
 weather_df %>%
   ggplot(aes(x = tmax, y = tmin)) +
   geom_hex()
+# geom_bin_2d()
 ```
 
+## Univariate plots
+```{r}
+weather_df %>%
+  ggplot( aes(x = tmax, fill = name)) + 
+  geom_histogram() +
+  facet_grid(. ~ name)
+```
+
+Try other plots
+```{r}
+weather_df %>%
+  ggplot(aes(x = tmax, fill = name)) +
+  geom_density(alpha = .3)
+```
+box plot
+```{r}
+weather_df %>%
+  ggplot( aes(x = name, y = tmax)) + 
+  geom_boxplot()
+```
+violin plots
+```{r}
+weather_df %>%
+  ggplot( aes(x = name, y = tmax)) + 
+  geom_violin()
+```
+ridges
+```{r}
+weather_df %>%
+  ggplot( aes(x = tmax, y = name)) + 
+  geom_density_ridges(scale = .8)
+```
+
+## Embedding plots
+```{r}
+weather_df %>%
+  ggplot( aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .3
+             )
+```
+
+```{r, fig.width = 12}
+weather_df %>%
+  ggplot( aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .3
+             )
+```

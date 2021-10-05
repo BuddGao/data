@@ -16,6 +16,15 @@ library(tidyverse)
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
+``` r
+library(ggridges)
+knitr::opts_chunk$set(  #global setting of chunk
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+```
+
 Loading dataset
 
 ``` r
@@ -85,7 +94,7 @@ weather_df %>%
 
     ## Warning: Removed 15 rows containing missing values (geom_point).
 
-![](viz-eda_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+<img src="viz-eda_files/figure-gfm/unnamed-chunk-4-1.png" width="90%" />
 
 one more scatt
 
@@ -103,13 +112,7 @@ weather_df %>%
 
     ## Warning: Removed 3 rows containing missing values (geom_point).
 
-![](viz-eda_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
-
-``` r
-help(geom_smooth)
-```
-
-    ## starting httpd help server ... done
+<img src="viz-eda_files/figure-gfm/unnamed-chunk-5-1.png" width="90%" />
 
 ## with manipulation
 
@@ -131,7 +134,7 @@ weather_df %>%
 
     ## Warning: Removed 3 rows containing non-finite values (stat_smooth).
 
-![](viz-eda_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+<img src="viz-eda_files/figure-gfm/unnamed-chunk-7-1.png" width="90%" />
 
 ``` r
 weather_df %>%
@@ -141,4 +144,94 @@ weather_df %>%
 
     ## Warning: Removed 15 rows containing non-finite values (stat_binhex).
 
-![](viz-eda_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+<img src="viz-eda_files/figure-gfm/unnamed-chunk-8-1.png" width="90%" />
+
+``` r
+# geom_bin_2d()
+```
+
+## Univariate plots
+
+``` r
+weather_df %>%
+  ggplot( aes(x = tmax, fill = name)) + 
+  geom_histogram() +
+  facet_grid(. ~ name)
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_bin).
+
+<img src="viz-eda_files/figure-gfm/unnamed-chunk-9-1.png" width="90%" />
+
+Try other plots
+
+``` r
+weather_df %>%
+  ggplot(aes(x = tmax, fill = name)) +
+  geom_density(alpha = .3)
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density).
+
+<img src="viz-eda_files/figure-gfm/unnamed-chunk-10-1.png" width="90%" />
+box plot
+
+``` r
+weather_df %>%
+  ggplot( aes(x = name, y = tmax)) + 
+  geom_boxplot()
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_boxplot).
+
+<img src="viz-eda_files/figure-gfm/unnamed-chunk-11-1.png" width="90%" />
+violin plots
+
+``` r
+weather_df %>%
+  ggplot( aes(x = name, y = tmax)) + 
+  geom_violin()
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_ydensity).
+
+<img src="viz-eda_files/figure-gfm/unnamed-chunk-12-1.png" width="90%" />
+ridges
+
+``` r
+weather_df %>%
+  ggplot( aes(x = tmax, y = name)) + 
+  geom_density_ridges(scale = .8)
+```
+
+    ## Picking joint bandwidth of 1.84
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density_ridges).
+
+<img src="viz-eda_files/figure-gfm/unnamed-chunk-13-1.png" width="90%" />
+
+## Embedding plots
+
+``` r
+weather_df %>%
+  ggplot( aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .3
+             )
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+<img src="viz-eda_files/figure-gfm/unnamed-chunk-14-1.png" width="90%" />
+
+``` r
+weather_df %>%
+  ggplot( aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .3
+             )
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+<img src="viz-eda_files/figure-gfm/unnamed-chunk-15-1.png" width="90%" />

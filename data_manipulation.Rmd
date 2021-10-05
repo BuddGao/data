@@ -68,4 +68,7 @@ litters_data =
     group = str_to_lower(group)) %>% 
   drop_na(wt_gain)
 ```
+```{r}
+Sys.setenv(LANGUAGE = "en")
+```
 
