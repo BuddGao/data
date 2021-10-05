@@ -48,40 +48,37 @@ weather_df %>%
   facet_grid(. ~ name) # separate the graphs.
 ```
 
-Let's get rid of rows "and": &, "or": |
+one more scatt
 ```{r}
-filter(litters_data, gd_of_birth == 20)
-filter(litters_data, gd0_weight < 21)
-filter(litters_data, group %in% c('Con7','Con8'))
-filter(litters_data, gd_of_birth == 20, group == "Con7")
-
-drop_na(litters_data, gd0_weight)
+weather_df %>%
+  ggplot(aes(x = date, y = tmax, size = prcp)) +
+  geom_point(alpha = .3) + # local setting for color
+  geom_smooth(se = FALSE) + # smooth line to approach data
+  facet_grid(. ~ name) # separate the graphs.  
 ```
 
-## mutate
-add or change columns
+
 ```{r}
-a =mutate(litters_data, 
-          weight_change = gd18_weight- gd0_weight,
-          group = str_to_lower(group))
+help(geom_smooth)
 ```
 
-rearrange
+## with manipulation
 ```{r}
-arrange(litters_data, gd_of_birth, gd0_weight)
+#weather_df %>%
+#  filter(name == "CentralPark_NY") %>%
+#  mutate(tmax = tmax *(9/5)+32)
+  
 ```
-pipes
+## Stacking geoms
 ```{r}
-litters_data = 
-  read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>%
-  janitor::clean_names() %>%
-  select(-pups_survive) %>%
-  mutate(
-    wt_gain = gd18_weight - gd0_weight,
-    group = str_to_lower(group)) %>% 
-  drop_na(wt_gain)
+weather_df %>%
+  ggplot(aes(x = date, y = tmax, color = name)) +
+  geom_smooth(se = FALSE) 
 ```
+
 ```{r}
-Sys.setenv(LANGUAGE = "en")
+weather_df %>%
+  ggplot(aes(x = tmax, y = tmin)) +
+  geom_hex()
 ```
 
