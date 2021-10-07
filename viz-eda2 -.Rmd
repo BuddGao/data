@@ -1,0 +1,202 @@
+---
+title: "ggplot 1"
+output: github_document
+---
+
+
+```{r}
+library(tidyverse)
+library(ggridges)
+library(viridis)
+knitr::opts_chunk$set(  #global setting of chunk
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+```
+Loading dataset 
+```{r}
+weather_df = 
+  rnoaa::meteo_pull_monitors(
+    c("USW00094728", "USC00519397", "USS0023B17S"),
+    var = c("PRCP", "TMIN", "TMAX"), 
+    date_min = "2017-01-01",
+    date_max = "2017-12-31") %>%
+  mutate(
+    name = recode(
+      id, 
+      USW00094728 = "CentralPark_NY", 
+      USC00519397 = "Waikiki_HA",
+      USS0023B17S = "Waterhole_WA"),
+    tmin = tmin / 10,
+    tmax = tmax / 10) %>%
+  select(name, id, everything())
+```
+
+## Scatterplot
+
+```{r}
+ggp_tmax_tmin =
+  weather_df %>%
+  ggplot(aes(x = tmin, y = tmax)) +
+  geom_point()
+
+```
+
+
+## Let's fancy it up
+color, lines, and so on
+```{r}
+weather_df %>%
+  ggplot(aes(x = tmin, y = tmax, color = name)) + #global setting for color
+  geom_point(alpha = .3) + # local setting for color
+  geom_smooth(se = FALSE) + # smooth line to approach data
+  facet_grid(. ~ name) # separate the graphs.
+```
+
+one more scatt
+```{r}
+weather_df %>%
+  ggplot(aes(x = date, y = tmax, size = prcp)) +
+  geom_point(alpha = .3) + # local setting for color
+  geom_smooth(se = FALSE) + # smooth line to approach data
+  facet_grid(. ~ name) # separate the graphs.  
+```
+
+
+## with manipulation
+```{r}
+#weather_df %>%
+#  filter(name == "CentralPark_NY") %>%
+#  mutate(tmax = tmax *(9/5)+32)
+  
+```
+## Stacking geoms
+```{r}
+weather_df %>%
+  ggplot(aes(x = date, y = tmax, color = name)) +
+  geom_smooth(se = FALSE) 
+```
+
+```{r}
+weather_df %>%
+  ggplot(aes(x = tmax, y = tmin)) +
+  geom_hex()
+# geom_bin_2d()
+```
+
+## Univariate plots
+```{r}
+weather_df %>%
+  ggplot( aes(x = tmax, fill = name)) + 
+  geom_histogram() +
+  facet_grid(. ~ name)
+```
+
+Try other plots
+```{r}
+weather_df %>%
+  ggplot(aes(x = tmax, fill = name)) +
+  geom_density(alpha = .3)
+```
+box plot
+```{r}
+weather_df %>%
+  ggplot( aes(x = name, y = tmax)) + 
+  geom_boxplot()
+```
+violin plots
+```{r}
+weather_df %>%
+  ggplot( aes(x = name, y = tmax)) + 
+  geom_violin()
+```
+ridges
+```{r}
+weather_df %>%
+  ggplot( aes(x = tmax, y = name)) + 
+  geom_density_ridges(scale = .8)
+```
+
+## Embedding plots
+```{r}
+weather_df %>%
+  ggplot( aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .3
+             )
+```
+
+```{r, fig.width = 12}
+weather_df %>%
+  ggplot( aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .3
+             )
+```
+
+# Viz 2 Labs
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name), alpha = .5) + 
+  labs(
+    title = "Temperature plot at three stations",
+    x = "Minimum daily temperature (C)",
+    y = "Maxiumum daily temperature (C)",
+    caption = "Data from the rnoaa package"
+  )  + viridis::scale_color_viridis(
+    name = "Location", #互斥色
+    discrete = TRUE
+  )
+      
+    
+```
+## Scales
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name), alpha = .5) + 
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temperature (C)",
+    y = "Maxiumum daily temperature (C)",
+    caption = "Data from the rnoaa package") + 
+  scale_x_continuous(
+    breaks = c(-15, 0, 15), 
+    labels = c("-15ºC", "0", "15"),
+    limits = c(-20, 30)) + 
+  scale_y_continuous(
+    trans = "sqrt", 
+    position = "right")
+```
+## Themes
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name), alpha = .5) + 
+  labs(
+    title = "Temperature plot at three stations",
+    x = "Minimum daily temperature (C)",
+    y = "Maxiumum daily temperature (C)",
+    caption = "Data from the rnoaa package"
+  )  + scale_color_viridis_d() +
+  theme_bw() +
+  theme(legend.position = "bottom")
+  
+```
+## `data` in geoms
+```{r}
+weather_df %>% 
+  ggplot(aes(x = date, y = tmax, color= name)) + 
+  geom_point() 
+central_park = 
+  weather_df %>% 
+  filter(name == "CentralPark_NY")
+
+waikiki = 
+  weather_df %>% 
+  filter(name == "Waikiki_HA")
+ggplot(data = waikiki, aes(x = date, y = tmax, color = name)) + 
+  geom_point() + 
+  geom_line(data = central_park)
+```
+
