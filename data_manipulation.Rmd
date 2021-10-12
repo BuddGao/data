@@ -71,4 +71,66 @@ litters_data =
 ```{r}
 Sys.setenv(LANGUAGE = "en")
 ```
+## Problem 3
+Sol:
+  
+  Let this random variable $X$ has a normal distribution with $\mu=132$ and $\sigma=9.8$.
+  
+  a)$P(X>137)=P(Z>\frac{x-\mu}{\sigma})=P(Z>\frac{137-132}{9.8})=P(Z>0.51)=0.305$. 
+```{r}
+1-pnorm(0.51)
+```
+So, the probability that a randomly selected American male between ages of 20 and 29 to have a systolic blood pressure above 137.0 is 0.305 to three decimal places.
+
+
+b) By CLT, $P(\bar{X}<129)=P(\frac{\bar{X}-\mu}{\sigma / \sqrt{n}}<\frac{129-\mu}{\sigma / \sqrt{n}})=P(Z<\frac{129-132}{9.8/ \sqrt{40}})=P(Z<-1.936)=0.026$
+```{r}
+pnorm(-1.936)
+```
+So, the probability that the sample mean for blood pressure of 40 males between ages of 20 and 29 will be less than 129 is 0.026 to three decimal places.
+
+c) $P(X<x_{0.9})=0.9$, then $x_{0.9}=144.56$
+```{r}
+qnorm(0.9,132,9.8)
+```
+So, the 90 quantile of the sampling distribution of the sample mean X for a sample size of 40 is 144.56 to two decimal places.
+
+## Problem 4
+
+Sol:Because we unknown the population standard deviation, the t-distribution should be used.
+
+a) $\bar{X}-t_{n-1,1-\alpha / 2} \frac{s}{\sqrt{n}} \leq \mu \leq \bar{X}+t_{n-1,1-\alpha / 2} \frac{s}{\sqrt{n}}$
+  
+$75-t_{30-1,1-0.05 / 2} \frac{8}{\sqrt{30}} \leq \mu \leq 75+t_{30-1,1-0.05 / 2} \frac{8}{\sqrt{30}}$
+  
+$72.01<\mu<77.99$
+```{r}
+lower = 75 - qt(0.975, df = 29) * 8/sqrt(30)
+upper = 75 + qt(0.975, df = 29) * 8/sqrt(30)
+c(lower, upper)
+```
+So, the 95% confidence interval for the population mean pulse rate of young females suffering from fibromyalgia is (72.01, 77.99).
+
+b) This confidence interval means we have 95% confidence to say that the population mean lies somewhere in the interval (72.01, 77.99).
+
+c) $H_{0}: \mu=70 \text { vs } H_{1}: \mu \neq 70$
+
+$\mathrm{t}=\frac{\bar{X}-\mu_{0}}{s / \sqrt{n}}=\mathrm{t}=\frac{75-70}{8 / \sqrt{30}}=3.42$
+
+$t_{n-1,1-\alpha / 2}=2.05$
+```{r}
+    # test statistic
+    tstat = (75 - 70) / (8/sqrt(30))
+    
+    # critical value
+    cv = qt(0.975, df = 30 - 1)
+    
+    # decision
+    ifelse(abs(tstat) > cv, "reject", "fail to reject")
+    
+```
+$\mathrm{t}>t_{n-1,1-\alpha / 2}$, so we reject $H_{0}$.
+
+$i.e.$ we have enough evidence to reject that the mean is equal to 70.
+
 
